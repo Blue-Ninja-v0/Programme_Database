@@ -5,11 +5,12 @@ import sqlite3
 import logging
 import pandas as pd
 from db_processor import export_database_to_excel, export_specific_upload
+from reports import generate_project_overview_report, generate_task_timeline_report, generate_resource_allocation_report, REPORT_VERSION
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'  # Replace with a real secret key
 app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['DATABASE'] = 'p6forecaster.db'
+app.config['DATABASE'] = '/Users/blueninja/p6forecaster.db'
 
 def init_db():
     with sqlite3.connect(app.config['DATABASE']) as conn:
@@ -142,6 +143,30 @@ def download_upload(upload_id):
     try:
         output_path = export_specific_upload(app.config['DATABASE'], upload_id)
         return send_file(output_path, as_attachment=True, download_name=f'upload_{upload_id}_export.xlsx')
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/report/project_overview/<int:upload_id>')
+def project_overview_report(upload_id):
+    try:
+        output_path = generate_project_overview_report(app.config['DATABASE'], upload_id)
+        return send_file(output_path, as_attachment=True, download_name=f'project_overview_{upload_id}_v{REPORT_VERSION}.xlsx')
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/report/task_timeline/<int:upload_id>')
+def task_timeline_report(upload_id):
+    try:
+        output_path = generate_task_timeline_report(app.config['DATABASE'], upload_id)
+        return send_file(output_path, as_attachment=True, download_name=f'task_timeline_{upload_id}_v{REPORT_VERSION}.xlsx')
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/report/resource_allocation/<int:upload_id>')
+def resource_allocation_report(upload_id):
+    try:
+        output_path = generate_resource_allocation_report(app.config['DATABASE'], upload_id)
+        return send_file(output_path, as_attachment=True, download_name=f'resource_allocation_{upload_id}_v{REPORT_VERSION}.xlsx')
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 

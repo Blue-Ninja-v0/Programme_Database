@@ -120,6 +120,15 @@
                     <form action="{{ url_for('download_upload', upload_id=upload[0]) }}" method="get">
                         <input type="submit" value="Download" class="btn btn-secondary">
                     </form>
+                    <form action="{{ url_for('project_overview_report', upload_id=upload[0]) }}" method="get" style="display: inline;">
+                        <input type="submit" value="Project Overview" class="btn btn-secondary">
+                    </form>
+                    <form action="{{ url_for('task_timeline_report', upload_id=upload[0]) }}" method="get" style="display: inline;">
+                        <input type="submit" value="Task Timeline" class="btn btn-secondary">
+                    </form>
+                    <form action="{{ url_for('resource_allocation_report', upload_id=upload[0]) }}" method="get" style="display: inline;">
+                        <input type="submit" value="Resource Allocation" class="btn btn-secondary">
+                    </form>
                 </td>
             </tr>
             {% endfor %}
